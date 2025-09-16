@@ -1,8 +1,10 @@
 {
-  "name": "Seaweed Essence #3",
+  "name": "BRONZE #3",
   "description": "Rare essence extracted from deep sea vegetation. This mystical substance contains the pure energy of the ocean depths, making it one of the most valuable artifacts.",
   "image": "https://ipfs.io/ipfs/bafkreidla43ymqtwyle2l3spdurritopgqcraat5bstmsrsys2atdvzubq",
   "external_url": "https://secretofthedeep.com",
+  "collection": "Secret of the Deep",
+  "background_color": "000000",
   "attributes": [
     {
       "trait_type": "Rarity",
@@ -29,9 +31,11 @@
     "files": [
       {
         "uri": "https://ipfs.io/ipfs/bafkreidla43ymqtwyle2l3spdurritopgqcraat5bstmsrsys2atdvzubq",
-        "type": "image/jpeg"
+        "type": "image/png"
       }
     ],
     "category": "image"
-  }
+  },
+  "animation_url": "https://ipfs.io/ipfs/bafkreidla43ymqtwyle2l3spdurritopgqcraat5bstmsrsys2atdvzubq",
+  "image_data": "https://ipfs.io/ipfs/bafkreidla43ymqtwyle2l3spdurritopgqcraat5bstmsrsys2atdvzubq"
 }
