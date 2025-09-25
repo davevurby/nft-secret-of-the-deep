@@ -31,8 +31,8 @@ contract SecretOfTheDeepNFT is ERC1155, Ownable, IERC4906 {
     using Strings for uint256;
     
     // Contract metadata
-    string public name = "Secret of the Deep";
-    string public symbol = "SOTD";
+    string public name = "Esantirion: Secret of the Deep";
+    string public symbol = "ESOTD";
     
     // Token metadata
     struct TokenInfo {
@@ -57,7 +57,7 @@ contract SecretOfTheDeepNFT is ERC1155, Ownable, IERC4906 {
     string private _baseURI;
     
     // Contract URI for collection metadata
-    string private _contractURI = "https://my-uri.com/contract";
+    string private _contractURI = "https://raw.githubusercontent.com/davevurby/nft-secret-of-the-deep/refs/heads/main/metadata/contract.json";
     
     // USDC token address (Polygon Native USDC)
     address public usdcAddress = 0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359;
@@ -68,12 +68,12 @@ contract SecretOfTheDeepNFT is ERC1155, Ownable, IERC4906 {
     event DividendPaid(address indexed to, uint256 indexed amount);
     
     constructor() ERC1155("") Ownable(msg.sender) {
-        _baseURI = "https://my-uri.com/tokens/{id}";
+        _baseURI = "https://raw.githubusercontent.com/davevurby/nft-secret-of-the-deep/refs/heads/main/metadata/{id}.json";
         
         // Initialize some sample tokens
-        _createToken(1, "GOLD", "Precious gold from the depths of the ocean", 50);
-        _createToken(2, "SILVER", "Rare silver with magical properties", 40);
-        _createToken(3, "BRONZE", "Ancient bronze extracted from deep sea", 20);
+        _createToken(1, "GOLD", "Gold", 25);
+        _createToken(2, "SILVER", "Silver", 20);
+        _createToken(3, "BRONZE", "Bronze", 50);
     }
     
     /**
@@ -279,6 +279,35 @@ contract SecretOfTheDeepNFT is ERC1155, Ownable, IERC4906 {
     }
     
     /**
+     * @dev Converts uint256 to 64-character hex string with leading zeros
+     * @param value The uint256 value to convert
+     * @return The 64-character hex string
+     */
+    function _toHexString(uint256 value) internal pure returns (string memory) {
+        if (value == 0) {
+            return "0000000000000000000000000000000000000000000000000000000000000000";
+        }
+        
+        uint256 temp = value;
+        uint256 digits = 0;
+        while (temp != 0) {
+            digits++;
+            temp >>= 4;
+        }
+        
+        bytes memory buffer = new bytes(64);
+        for (uint256 i = 64; i > 0; i--) {
+            buffer[i - 1] = _HEX_SYMBOLS[value & 0xf];
+            value >>= 4;
+        }
+        
+        return string(buffer);
+    }
+    
+    // Hex symbols for conversion
+    bytes16 private constant _HEX_SYMBOLS = "0123456789abcdef";
+
+    /**
      * @dev Returns the URI for a token ID
      * @param tokenId The ID of the token
      * @return The URI of the token
@@ -286,10 +315,10 @@ contract SecretOfTheDeepNFT is ERC1155, Ownable, IERC4906 {
     function uri(uint256 tokenId) public view virtual override returns (string memory) {
         require(tokenInfo[tokenId].isActive, "Token does not exist");
         
-        // Replace {id} placeholder with actual tokenId
+        // Replace {id} placeholder with actual tokenId in 64-char hex format
         string memory template = _baseURI;
         bytes memory templateBytes = bytes(template);
-        bytes memory result = new bytes(templateBytes.length + 20); // Max uint256 length
+        bytes memory result = new bytes(templateBytes.length + 64); // 64 chars for hex
         
         uint256 resultIndex = 0;
         for (uint256 i = 0; i < templateBytes.length; i++) {
@@ -300,8 +329,8 @@ contract SecretOfTheDeepNFT is ERC1155, Ownable, IERC4906 {
                     templateBytes[i + 2] == 0x64 && // 'd'
                     templateBytes[i + 3] == 0x7d) { // '}'
                     
-                    // Replace {id} with tokenId
-                    string memory tokenIdStr = tokenId.toString();
+                    // Replace {id} with tokenId in 64-char hex format
+                    string memory tokenIdStr = _toHexString(tokenId);
                     bytes memory tokenIdBytes = bytes(tokenIdStr);
                     for (uint256 j = 0; j < tokenIdBytes.length; j++) {
                         result[resultIndex] = tokenIdBytes[j];
